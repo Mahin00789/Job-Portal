@@ -13,8 +13,15 @@ const jobSchema = mongoose.Schema(
     },
     applicants: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User"
+        },
+        status: {
+          type: String,
+          enum: ["applied", "accepted"],
+          default: "applied"
+        }
       }
     ]
   },

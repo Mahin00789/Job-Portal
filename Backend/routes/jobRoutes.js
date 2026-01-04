@@ -4,16 +4,37 @@ import {
   getJobs,
   applyJob,
   getAppliedJobs,
-  getRecruiterJobs
+  getRecruiterJobs,
+  acceptApplicant,
+  rejectApplicant
 } from "../controllers/jobController.js";
 import { protect, recruiterOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Public
 router.get("/", getJobs);
-router.get("/applied",protect,getAppliedJobs);
+
+// Candidate
+router.get("/applied", protect, getAppliedJobs);
+router.post("/:id/apply", protect, applyJob);
+
+// Recruiter
 router.get("/recruiter", protect, recruiterOnly, getRecruiterJobs);
 router.post("/", protect, recruiterOnly, createJob);
-router.post("/:id/apply", protect, applyJob);
+
+// Accept applicant
+router.patch(
+  "/:jobId/applicants/:userId/accept",
+  protect,
+  recruiterOnly,
+  acceptApplicant
+);
+router.patch(
+  "/:jobId/applicants/:userId/reject",
+  protect,
+  recruiterOnly,
+  rejectApplicant
+);
 
 export default router;
